@@ -42,6 +42,24 @@ body:before {
     display: none;
 }
 
+.label-group {
+    text-align: center;
+}
+
+.label-group > input {
+    padding-left: 4px!important;
+}
+
+.label {
+    font-weight: bold;
+    color: #2c4557;
+    font-size: large;
+}
+
+.submit-group {
+    margin-top: 15px;
+}
+
 .form-control {
     width: 100%;
     min-height: 38px;
@@ -130,6 +148,7 @@ button.accent {
 
 .username-page-container .username-submit {
     margin-top: 10px;
+    width: 100%;
 }
 
 
