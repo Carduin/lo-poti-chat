@@ -5,16 +5,12 @@ var chatPage = document.querySelector('#chat-page');
 var usernameForm = document.querySelector('#usernameForm');
 var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
+var colorInput = document.querySelector('#color');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
 var username = null;
-
-var colors = [
-    '#2196F3', '#32c787', '#00BCD4', '#ff5652',
-    '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
-];
 
 function connect(event) {
     username = document.querySelector('#name').value.trim();
@@ -58,6 +54,7 @@ function sendMessage(event) {
     if(messageContent && stompClient) {
         var chatMessage = {
             sender: username,
+            senderColor: colorInput.value,
             content: messageInput.value,
             type: 'CHAT'
         };
@@ -86,7 +83,7 @@ function onMessageReceived(payload) {
         var avatarElement = document.createElement('i');
         var avatarText = document.createTextNode(message.sender[0]);
         avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(message.sender);
+        avatarElement.style['background-color'] = message.senderColor;
 
         messageElement.appendChild(avatarElement);
 
@@ -106,6 +103,13 @@ function onMessageReceived(payload) {
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
+/*
+
+var colors = [
+    '#2196F3', '#32c787', '#00BCD4', '#ff5652',
+    '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
+];
+
 
 function getAvatarColor(messageSender) {
     var hash = 0;
@@ -116,6 +120,8 @@ function getAvatarColor(messageSender) {
     var index = Math.abs(hash % colors.length);
     return colors[index];
 }
+
+ */
 
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)

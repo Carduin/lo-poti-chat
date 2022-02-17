@@ -32,12 +32,14 @@ public class WebSocketEventListener {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
         String username = (String) headerAccessor.getSessionAttributes().get("username");
+        String senderColor = (String) headerAccessor.getSessionAttributes().get("senderColor");
         if(username != null) {
             logger.info("User Disconnected : " + username);
 
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setType(ChatMessage.MessageType.LEAVE);
             chatMessage.setSender(username);
+            chatMessage.setSenderColor(senderColor);
 
             messagingTemplate.convertAndSend("/topic/public", chatMessage);
         }

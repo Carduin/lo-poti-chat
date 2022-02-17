@@ -1,12 +1,10 @@
 package com.example.websocketdemo.model;
 
-/**
- * Created by rajeevkumarsingh on 24/07/17.
- */
 public class ChatMessage {
     private MessageType type;
     private String content;
     private String sender;
+    private String senderColor;
 
     public enum MessageType {
         CHAT,
@@ -36,5 +34,13 @@ public class ChatMessage {
 
     public void setSender(String sender) {
         this.sender = sender;
+    }
+
+    public String getSenderColor() {
+        return senderColor;
+    }
+
+    public void setSenderColor(String senderColor) {
+        this.senderColor = senderColor;
     }
 }

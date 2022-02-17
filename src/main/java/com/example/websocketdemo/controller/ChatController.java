@@ -25,6 +25,9 @@ public class ChatController {
                                SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        if(chatMessage.getSenderColor() != null) {
+            headerAccessor.getSessionAttributes().put("senderColor", chatMessage.getSenderColor());
+        }
         return chatMessage;
     }
 
