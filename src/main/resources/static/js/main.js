@@ -5,6 +5,7 @@ var chatPage = document.querySelector('#chat-page');
 var usernameForm = document.querySelector('#usernameForm');
 var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
+var fileInput = document.querySelector('#attachement');
 var colorInput = document.querySelector('#color');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
@@ -43,7 +44,7 @@ function onConnected() {
 
 
 function onError(error) {
-    connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
+    connectingElement.textContent = 'Impossible de se connecter à l\'hôte. Réessayez !';
     connectingElement.style.color = 'red';
 }
 
@@ -52,31 +53,49 @@ function sendMessage(event) {
     var messageContent = messageInput.value.trim();
 
     if(messageContent && stompClient) {
-        var chatMessage = {
-            sender: username,
-            senderColor: colorInput.value,
-            content: messageInput.value,
-            type: 'CHAT'
-        };
 
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-        messageInput.value = '';
+        if(fileInput.files.length > 0) {
+            getBase64(fileInput.files[0]).then(base => {
+                var chatMessage = {
+                    sender: username,
+                    senderColor: colorInput.value,
+                    content: messageInput.value,
+                    type: 'CHAT',
+                    attachement: base
+                };
+
+                stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+                messageForm.reset();
+            })
+        } else {
+            var chatMessage = {
+                sender: username,
+                senderColor: colorInput.value,
+                content: messageInput.value,
+                type: 'CHAT'
+            };
+
+            stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+            messageForm.reset();
+        }
+
     }
     event.preventDefault();
 }
 
 
 function onMessageReceived(payload) {
+
     var message = JSON.parse(payload.body);
 
     var messageElement = document.createElement('li');
 
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
-        message.content = message.sender + ' joined!';
+        message.content = message.sender + ' est arrivé parmis nous !';
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
-        message.content = message.sender + ' left!';
+        message.content = message.sender + ' s\'est barré !';
     } else {
         messageElement.classList.add('chat-message');
 
@@ -102,6 +121,16 @@ function onMessageReceived(payload) {
     messageArea.appendChild(messageElement);
     messageArea.scrollTop = messageArea.scrollHeight;
 }
+
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
 
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
