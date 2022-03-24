@@ -6,6 +6,7 @@ public class ChatMessage {
     private String sender;
     private String senderColor;
     private String attachement;
+    private String attachementFileName;
 
     public enum MessageType {
         CHAT,
@@ -48,4 +49,8 @@ public class ChatMessage {
     public String getAttachement() { return attachement;}
 
     public void setAttachement(String attachement) { this.attachement = attachement; }
+
+    public String getAttachementFileName() { return attachementFileName; }
+
+    public void setAttachementFileName(String attachementFileName) { this.attachementFileName = attachementFileName; }
 }

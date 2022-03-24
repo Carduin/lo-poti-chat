@@ -71,6 +71,11 @@ body:before {
     margin-bottom: 15px;
 }
 
+.file-input {
+    padding-left: 0;
+    padding-bottom: 2px;
+}
+
 input {
     padding-left: 10px;
     outline: none;

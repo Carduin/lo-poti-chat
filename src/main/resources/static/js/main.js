@@ -24,6 +24,7 @@ function connect(event) {
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, onConnected, onError);
+        stompClient.debug = null;
     }
     event.preventDefault();
 }
@@ -61,7 +62,8 @@ function sendMessage(event) {
                     senderColor: colorInput.value,
                     content: messageInput.value,
                     type: 'CHAT',
-                    attachement: base
+                    attachement: base,
+                    attachementFileName: fileInput.files[0].name
                 };
 
                 stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
@@ -103,7 +105,6 @@ function onMessageReceived(payload) {
         var avatarText = document.createTextNode(message.sender[0]);
         avatarElement.appendChild(avatarText);
         avatarElement.style['background-color'] = message.senderColor;
-
         messageElement.appendChild(avatarElement);
 
         var usernameElement = document.createElement('span');
@@ -115,8 +116,15 @@ function onMessageReceived(payload) {
     var textElement = document.createElement('p');
     var messageText = document.createTextNode(message.content);
     textElement.appendChild(messageText);
-
     messageElement.appendChild(textElement);
+
+    if(message.attachement) {
+        var linkElement = document.createElement('a');
+        linkElement.setAttribute('href', message.attachement);
+        linkElement.setAttribute('download', message.attachementFileName)
+        linkElement.text = message.attachementFileName;
+        messageElement.appendChild(linkElement);
+    }
 
     messageArea.appendChild(messageElement);
     messageArea.scrollTop = messageArea.scrollHeight;
@@ -130,7 +138,6 @@ function getBase64(file) {
         reader.onerror = error => reject(error);
     });
 }
-
 
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
