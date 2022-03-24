@@ -53,7 +53,7 @@ function onError(error) {
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
 
-    if(messageContent && stompClient) {
+    if(stompClient && (messageContent || fileInput.files.length)) {
 
         if(fileInput.files.length > 0) {
             getBase64(fileInput.files[0]).then(base => {
