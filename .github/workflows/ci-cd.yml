@@ -22,6 +22,6 @@ jobs:
       - name: Build the project
         run: ./mvnw clean && ./mvnw package
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag lo-poti-chat:$(date +%s)
+        run: docker build . --file Dockerfile --tag carduin/lo-poti-chat:$(date +%s)
       - name: Push the image to docker hub
         run : docker image push --all-tags carduin/lo-poti-chat
