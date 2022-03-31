@@ -26,7 +26,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build the project
         run: ./mvnw clean && ./mvnw package
-      - name: Build the Docker image
+      - name: Build the Docker image with version
         run: docker build . --file Dockerfile --tag carduin/lo-poti-chat:$(date +%s)
+      - name: Build the latest Docker image
+        run: docker build . --file Dockerfile --tag carduin/lo-poti-chat:latest
       - name: Push the image to docker hub
         run : docker image push --all-tags carduin/lo-poti-chat
